@@ -18,10 +18,14 @@ def run_algorithms(problem, algorithms):
         # Run the algorithm
         run_stats, curves = runner.run()
 
+        # Inverse the fitness to convert to maximization problem
+        run_stats['Fitness'] = (1.0 / run_stats['Fitness']) * 1000
+        curves['Fitness'] = (1.0 / curves['Fitness']) * 1000
+
         # Extract results
-        best_state_index = run_stats['Fitness'].idxmin()  # Index of the row with the best fitness
+        best_state_index = run_stats['Fitness'].idxmax()  # Index of the row with the best fitness
         best_state = run_stats.loc[best_state_index, 'State']
-        best_fitness = run_stats['Fitness'].min()  # Best fitness value in the curve
+        best_fitness = run_stats['Fitness'].max()  # Best fitness value in the curve
         fitness_curve = curves['Fitness']
 
         results_dict[algorithm_name] = {
@@ -42,7 +46,7 @@ def hyperparameter_tuning(problem, problem_id):
                 'seed'              : 4,
                 'iteration_list'    : [10, 20, 50, 100],
                 'restart_list'      : [5, 10, 15, 20],
-                'max_attempts'      : 20,
+                'max_attempts'      : 1000,
                 'generate_curves'   : True
             }
         },
@@ -55,7 +59,7 @@ def hyperparameter_tuning(problem, problem_id):
                 'iteration_list'    : [10, 20, 50, 100],
                 'temperature_list'  : [10, 20, 50, 100],
                 'decay_list'        : [mlrose_hiive.GeomDecay, mlrose_hiive.ArithDecay, mlrose_hiive.ExpDecay],
-                'max_attempts'      : 10,
+                'max_attempts'      : 1000,
                 'generate_curves'   : True
             }
         },
@@ -70,7 +74,7 @@ def hyperparameter_tuning(problem, problem_id):
                 'mutation_rates'    : [0.2, 0.4, 0.6, 0.8],
                 'hamming_factors'   : None,
                 'hamming_factors_decays' : None,
-                'max_attempts'      : 10,
+                'max_attempts'      : 1000,
                 'generate_curves'   : True
             }
         },
@@ -83,7 +87,7 @@ def hyperparameter_tuning(problem, problem_id):
                 'iteration_list'    : [10, 20, 50, 100],
                 'population_sizes'  : [100, 200, 300, 400],
                 'keep_percent_list' : [0.2, 0.4, 0.6, 0.8],
-                'max_attempts'      : 10,
+                'max_attempts'      : 1000,
                 'generate_curves'   : True
             }
         }
@@ -125,6 +129,10 @@ def hyperparameter_tuning(problem, problem_id):
 
         # Run the algorithm
         run_stats, curves = runner.run()
+        
+        # Inverse the fitness to convert to maximization problem
+        run_stats['Fitness'] = (1.0 / run_stats['Fitness']) * 1000
+        curves['Fitness'] = (1.0 / curves['Fitness']) * 1000
 
         # Create Subplots
         fig, axes = plt.subplots(1, len(params[algorithm_name]), figsize=(15, 5))
@@ -142,7 +150,7 @@ def hyperparameter_tuning(problem, problem_id):
                 filtered_stats = run_stats[run_stats[param_name] == param_value]
                 
                 # Get the maximum fitness value for this parameter value
-                max_fitness = filtered_stats['Fitness'].min()
+                max_fitness = filtered_stats['Fitness'].max()
                 
                 # Append values to the lists
                 y_values.append(max_fitness)
@@ -156,9 +164,6 @@ def hyperparameter_tuning(problem, problem_id):
             axes[idx].set_xticks(x_values)  # Set ticks to match the number of parameter values
             axes[idx].set_xticklabels(param_range)  # Set tick labels to parameter values
             axes[idx].set_xlabel(param_name, fontsize=10)
-            
-            # Add legend
-            # axes[idx].legend()
         
         # Set title for the entire subplot
         fig.suptitle(f'{algorithm_name} - Fitness vs Parameter Values', fontsize=15)

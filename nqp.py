@@ -54,7 +54,7 @@ def display_results(results_dict, num_queens):
     plt.figure(figsize=(8, 8))
     for i, (algorithm_name, result) in enumerate(results_dict.items(), 1):
         plt.subplot(2, 2, i)
-        plot_board(result['Best_State'], num_queens, f'{algorithm_name} - Final Position', int(results_dict[algorithm_name]['Best_Fitness']))
+        plot_board(result['Best_State'], num_queens, f'{algorithm_name} - Final Position', round(results_dict[algorithm_name]['Best_Fitness'], 2))
 
     plt.tight_layout()
     plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1, hspace=0.3, wspace=0.2)

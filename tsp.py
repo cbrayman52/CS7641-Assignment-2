@@ -83,7 +83,7 @@ def display_results(results_dict, city_coordinates, area):
         axes[i].plot(x_best_state, y_best_state, linestyle='--', color='red', label=algorithm_label)
 
         # Set title for each subplot
-        fitness = int(results['Best_Fitness'])
+        fitness = results['Best_Fitness']
         axes[i].set_title(f'TSP - {algorithm_name}\nFitness: {fitness}')
 
         # Set x-axis and y-axis limits

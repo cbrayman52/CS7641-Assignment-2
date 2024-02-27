@@ -3,11 +3,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import accuracy_score
 
+import nn
 import tsp
 import nqp
 import gcp
@@ -28,7 +28,7 @@ problem_tsp.maximize = -1.0
 tsp.display_city_coordinates(problem_tsp.coords, area)
 
 # Perform hyperparameter tuning
-run_algorithms.hyperparameter_tuning(problem_tsp, 'TSP')
+# run_algorithms.hyperparameter_tuning(problem_tsp, 'TSP')
 
 # Define optimization algorithms with optimized parameters
 algorithms = {
@@ -91,7 +91,7 @@ tsp.display_results(results, problem_tsp.coords, area)
 ############################### N-Queens (NQP) ################################
 ###############################################################################
 # Define the number of queens
-num_queens = 8
+num_queens = 20
 
 # Define an optimization problem using QueensGenerator
 problem_nqp = mlrose_hiive.QueensGenerator.generate(seed=None, size=num_queens)
@@ -106,7 +106,7 @@ plt.savefig('Images/NQP/NQP_Initial_State.png')
 plt.close()
 
 # Perform hyperparameter tuning
-run_algorithms.hyperparameter_tuning(problem_nqp, 'NQP')
+# run_algorithms.hyperparameter_tuning(problem_nqp, 'NQP')
 
 # Define optimization algorithms with optimized parameters
 algorithms = {
@@ -171,17 +171,17 @@ nqp.display_results(results, num_queens)
 ############################ Graph Coloring (GCP) #############################
 ###############################################################################
 # Number of nodes in graph
-num_nodes = 12
+num_nodes = 20
 
 # Define an optimization problem using MaxKColorGenerator
 problem_gcp = mlrose_hiive.MaxKColorGenerator.generate(seed=None, number_of_nodes=num_nodes, max_connections_per_node=4, max_colors=None)
-problem_gcp.maximize = 1.0
+problem_gcp.maximize = -1.0
 
 # Display Graph
 gcp.display_graph(problem_gcp)
 
 # Perform hyperparameter tuning
-run_algorithms.hyperparameter_tuning(problem_gcp, 'GCP')
+# run_algorithms.hyperparameter_tuning(problem_gcp, 'GCP')
 
 # Define optimization algorithms with optimized parameters
 algorithms = {
@@ -259,20 +259,19 @@ for column in wine_quality.columns:
         if lower_limit is not None and upper_limit is not None:
             wine_quality[column] = np.where((wine_quality[column] < lower_limit) | (wine_quality[column] > upper_limit), wine_quality[column].mean(), wine_quality[column])
 
-#Making binary classificaion for the response variable.
-#Dividing wine as good and bad by giving the limit for the quality
+# Alter dataset to be binary classificaion
 bins = (2, 6.5, 8)
 group_names = ['bad', 'good']
 wine_quality['quality'] = pd.cut(wine_quality['quality'], bins = bins, labels = group_names)
 
-#Now lets assign a labels to our quality variable
+# Assign labels to quality variable
 label_quality = LabelEncoder()
 
-#Bad becomes 0 and good becomes 1 
+# Bad becomes 0 and good becomes 1 
 wine_quality['quality'] = label_quality.fit_transform(wine_quality['quality'])
 wine_quality['quality'].value_counts()
 
-#Now seperate the dataset as response variable and feature variabes
+# Seperate the dataset as response variable and feature variabes
 x = wine_quality.drop('quality', axis = 1)
 y = wine_quality['quality']
 

@@ -49,7 +49,7 @@ def display_results(results_dict, graph, num_nodes):
     for i, (algorithm_name, result) in enumerate(results_dict.items()):
         best_state = result['Best_State']
         node_colors = [best_state[node] for node in range(num_nodes)]
-        fitness_value = result['Best_Fitness']        
+        fitness_value = round(result['Best_Fitness'], 2)
         plot_graph_subplot(axes[i], graph, node_colors, f"Best State - {algorithm_name}", fitness_value)
 
     # Adjust layout
