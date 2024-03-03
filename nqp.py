@@ -23,14 +23,13 @@ def plot_board(state, num_queens, title, fitness):
 
     # Add column labels
     row_labels = [char for char in string.ascii_lowercase[:num_queens]]
-    plt.xticks(np.arange(num_queens), row_labels)
+    if num_queens < 27:
+        plt.xticks(np.arange(num_queens), row_labels)
+    else:
+        plt.xticks(np.arange(num_queens), np.arange(1, num_queens + 1))
 
     # Add title
-    plt.title(f"{title}\nFitness: {fitness}")
-
-
-def hyperparameter_tuning(num_queens, fitness_nqp):
-    return
+    plt.title(f'{title}\nFitness: {fitness}')
 
 
 def display_results(results_dict, num_queens):
@@ -45,10 +44,40 @@ def display_results(results_dict, num_queens):
     # Add labels, title, and legend
     plt.xlabel('Iteration')
     plt.ylabel('Fitness Value')
-    plt.title('Fitness Curve Comparison for Optimization Algorithms')
+    plt.title('N-Queens - Fitness Curve')
     plt.legend()
-    plt.savefig('Images/NQP/NQP_Fitness_Curve.png')
+    plt.savefig(f'Images/NQP/NQP Fitness Curve-{num_queens}.png')
     plt.close()
+
+    # Plot function evaluation curves for each algorithm
+    for algorithm_name, results in results_dict.items():  
+        fevals = results['FEvals']
+        times = results['Time']
+        iterations = results['Iteration']
+        final_iterations = iterations.stop
+        final_FEvals = round(fevals.iloc[-1], 3)
+        final_time = round(times[-1], 3)
+
+        # Plot FEvals/Time
+        plt.subplot(1, 2, 1)
+        plt.plot(times, fevals, label=algorithm_name)
+        plt.annotate(f'({final_time}, {final_FEvals})', (final_time, final_FEvals), textcoords="offset points", xytext=(0,0), ha='center')
+        plt.title('FEvals/Time')
+        plt.xlabel('Time (seconds)')
+        plt.ylabel('Function Evaluations')
+
+        # Plot FEvals/Iterations
+        plt.subplot(1, 2, 2)
+        plt.plot(iterations, fevals, label=algorithm_name)
+        plt.annotate(f'({final_iterations}, {final_FEvals})', (final_iterations, final_FEvals), textcoords="offset points", xytext=(0,0), ha='center')
+        plt.title('FEvals/Iterations')
+        plt.xlabel('Iterations')
+        
+        # Add an overall title
+        plt.suptitle(f'{algorithm_name}')
+        plt.tight_layout()
+        plt.savefig(f'Images/NQP/{algorithm_name} FEvals-{num_queens}')
+        plt.close()
 
     # Plot the final positions of the board for each algorithm
     plt.figure(figsize=(8, 8))
@@ -59,5 +88,5 @@ def display_results(results_dict, num_queens):
     plt.tight_layout()
     plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1, hspace=0.3, wspace=0.2)
 
-    plt.savefig('Images/NQP/NQP_Final_Positions.png')
+    plt.savefig(f'Images/NQP/NQP Final Positions-{num_queens}.png')
     plt.close()

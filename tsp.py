@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def display_city_coordinates(coords, area):
+def display_city_coordinates(coords, area, num_cities):
 
     # Extract x and y coordinates separately
     x_coordinates, y_coordinates = zip(*coords)
@@ -13,7 +13,7 @@ def display_city_coordinates(coords, area):
 
     # Annotate each point with its corresponding number
     for i, (x, y) in enumerate(coords):
-        plt.annotate(str(i+1), (x, y), textcoords="offset points", xytext=(0,5), ha='center')
+        plt.annotate(str(i+1), (x, y), textcoords='offset points', xytext=(0,5), ha='center')
 
     # Add labels, title, and legend
     plt.xlim(-1, area+1)
@@ -22,13 +22,12 @@ def display_city_coordinates(coords, area):
     plt.yticks(range(0, area+1, 2))
     plt.xlabel('X Coordinate')
     plt.ylabel('Y Coordinate')
-    plt.title('Scatter Plot of Coordinates')
-    plt.legend(loc='best')
-    plt.savefig('Images/TSP/TSP_Initial_State.png')
+    plt.title(f'Scatter Plot of Coordinates - Population Size = {num_cities}')
+    plt.savefig(f'Images/TSP/TSP Initial State-{num_cities}.png')
     plt.close()
 
 
-def display_results(results_dict, city_coordinates, area):
+def display_results(results_dict, city_coordinates, area, pop_size):
     
     # Plot fitness curves for each algorithm
     for algorithm_name, results in results_dict.items():
@@ -40,11 +39,42 @@ def display_results(results_dict, city_coordinates, area):
     # Add labels, title, and legend
     plt.xlabel('Iteration')
     plt.ylabel('Fitness Value')
-    plt.title('Fitness Curve Comparison for Optimization Algorithms')
+    plt.title('TSP - Fitness Curve')
     plt.legend()
-    plt.savefig('Images/TSP/TSP_Fitness_Curve.png')
+    plt.savefig(f'Images/TSP/TSP Fitness Curve-{pop_size}.png')
     plt.close()
 
+    # Plot function evaluation curves for each algorithm
+    for algorithm_name, results in results_dict.items():  
+        fevals = results['FEvals']
+        times = results['Time']
+        iterations = results['Iteration']
+        final_iterations = iterations.stop
+        final_FEvals = round(fevals.iloc[-1], 3)
+        final_time = round(times[-1], 3)
+
+        # Plot FEvals/Time
+        plt.subplot(1, 2, 1)
+        plt.plot(times, fevals, label=algorithm_name)
+        plt.annotate(f'({final_time}, {final_FEvals})', (final_time, final_FEvals), textcoords="offset points", xytext=(0,0), ha='center')
+        plt.title('FEvals/Time')
+        plt.xlabel('Time (seconds)')
+        plt.ylabel('Function Evaluations')
+
+        # Plot FEvals/Iterations
+        plt.subplot(1, 2, 2)
+        plt.plot(iterations, fevals, label=algorithm_name)
+        plt.annotate(f'({final_iterations}, {final_FEvals})', (final_iterations, final_FEvals), textcoords="offset points", xytext=(0,0), ha='center')
+        plt.title('FEvals/Iterations')
+        plt.xlabel('Iterations')
+        
+        # Add an overall title
+        plt.suptitle(f'{algorithm_name}')
+        plt.tight_layout()
+        plt.savefig(f'Images/TSP/{algorithm_name} FEvals-{pop_size}')
+        plt.close()
+
+    # Plot Final Results
     # Extract x and y coordinates of cities
     x_cities, y_cities = zip(*city_coordinates)
 
@@ -71,7 +101,7 @@ def display_results(results_dict, city_coordinates, area):
 
         # Annotate each point with its corresponding number
         for j, (x, y) in enumerate(city_coordinates):
-            axes[i].annotate(str(j+1), (x, y), textcoords="offset points", xytext=(0,5), ha='center')
+            axes[i].annotate(str(j+1), (x, y), textcoords='offset points', xytext=(0,5), ha='center')
 
         # Plot the best state with dashed red lines
         best_tsp_state = list(best_tsp_state) + [best_tsp_state[0]]  # Connect the last city to the first city
@@ -99,5 +129,5 @@ def display_results(results_dict, city_coordinates, area):
     plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1, hspace=0.3, wspace=0.2)
 
     # Save the plot
-    plt.savefig('Images/TSP/TSP_Solutions.png')
+    plt.savefig(f'Images/TSP/TSP Final Solutions-{pop_size}.png')
     plt.close()
