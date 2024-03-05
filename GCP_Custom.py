@@ -16,7 +16,7 @@ class MaxKColorGenerator:
         """
         np.random.seed(seed)
         # all nodes have to be connected, somehow.
-        node_connection_counts = 1 + np.random.randint(max_connections_per_node, size=number_of_nodes)
+        node_connection_counts = np.random.randint(max_connections_per_node, size=number_of_nodes)
 
         node_connections = {}
         nodes = range(number_of_nodes)
@@ -153,14 +153,10 @@ class MaxKColor:
         """
 
         fitness = 0
-
-        # this is the count of neigbor nodes with the same state value.
-        # Therefore state value represents color.
-        # This is NOT what the docs above say.
-
-        edges = self.edges if self.graph_edges is None else self.graph_edges
-        # fitness = sum(int(state[n1] == state[n2]) for (n1, n2) in edges)
-        fitness = sum(int(state[n1] != state[n2]) for (n1, n2) in edges)
+        for edge in self.edges:
+            node1, node2 = edge
+            if state[node1] == state[node2]:
+                fitness += 1
         """
         if fitness == 0:
             for i in range(len(edges)):

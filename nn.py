@@ -101,7 +101,7 @@ def plot_loss(algorithm, params, title, x_train, y_train, x_test, y_test):
                                         x_test=x_test,
                                         y_test=y_test,
                                         experiment_name=title,
-                                        output_directory='Output/NN',
+                                        #output_directory='Output/NN',
                                         algorithm=algorithm,
                                         grid_search_parameters=params,
                                         grid_search_scorer_method=skmt.balanced_accuracy_score,
@@ -172,7 +172,7 @@ def plot_loss(algorithm, params, title, x_train, y_train, x_test, y_test):
 
         # Create the grouped bar chart
         axes[idx].bar(indices - bar_width/2, training_scores, bar_width, label='Training Scores')
-        axes[idx].bar(indices + bar_width/2, test_scores, bar_width, label='Test Scores')
+        axes[idx].bar(indices + bar_width/2, test_scores, bar_width, label='Cross-Validation Scores')
 
         # Adding labels and title
         axes[idx].set_xticks(indices)  # Set ticks to match the number of parameter values

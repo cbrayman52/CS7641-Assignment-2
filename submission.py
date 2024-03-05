@@ -162,7 +162,7 @@ for index, queens in enumerate(num_queens):
                 'seed'              : None,
                 'iteration_list'    : [500],
                 'restart_list'      : [15],
-                'max_attempts'      : 100,
+                'max_attempts'      : 500,
                 'generate_curves'   : True,
             }
         },
@@ -174,7 +174,7 @@ for index, queens in enumerate(num_queens):
                 'iteration_list'    : [500],
                 'temperature_list'  : [10],
                 'decay_list'        : [mlrose_hiive.GeomDecay],
-                'max_attempts'      : 100,
+                'max_attempts'      : 500,
                 'generate_curves'   : True,
             }
         },
@@ -188,7 +188,7 @@ for index, queens in enumerate(num_queens):
                 'mutation_rates'    : [0.4],
                 'hamming_factors'   : None,
                 'hamming_factors_decays' : None,
-                'max_attempts'      : 100,
+                'max_attempts'      : 500,
                 'generate_curves'   : True
             }
         },
@@ -200,7 +200,7 @@ for index, queens in enumerate(num_queens):
                 'iteration_list'    : [500],
                 'population_sizes'  : [400],
                 'keep_percent_list' : [0.4],
-                'max_attempts'      : 100,
+                'max_attempts'      : 500,
                 'generate_curves'   : True
             }
         }
@@ -255,7 +255,7 @@ results = []
 
 for index, nodes in enumerate(num_nodes):
     # Define an optimization problem using MaxKColorGenerator
-    problem_gcp = GCP_Custom.MaxKColorGenerator.generate(seed=None, number_of_nodes=nodes, max_connections_per_node=3, max_colors=5)
+    problem_gcp = GCP_Custom.MaxKColorGenerator.generate(seed=None, number_of_nodes=nodes, max_connections_per_node=3, max_colors=3)
     problem_gcp.maximize = -1.0
 
     # Display Graph
@@ -483,7 +483,7 @@ problem_nn_sa = nn.CustomNeuralNetwork(hidden_nodes=[10],
                                        learning_rate=0.01,
                                        early_stopping=False,
                                        clip_max=100,
-                                       schedule=mlrose_hiive.ExpDecay(),
+                                       schedule=mlrose_hiive.GeomDecay(),
                                        random_state=4,
                                        curve=True)
 

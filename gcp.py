@@ -74,9 +74,11 @@ def display_results(results_dict, graph, num_nodes):
     fig, axes = plt.subplots(1, num_algorithms, figsize=(15, 5))
 
     # Visualize the best state for each algorithm
-    for i, (algorithm_name, result) in enumerate(results_dict.items()):
-        best_state = result['Best_State']
-        fitness_value = round(result['Best_Fitness'], 2)
+    for i, (algorithm_name, results) in enumerate(results_dict.items()):
+        best_state = []
+        for j in graph.nodes:
+            best_state.append(results['Best_State'][j])
+        fitness_value = round(results['Best_Fitness'], 2)
         plot_graph_subplot(axes[i], graph, best_state, f'Best State - {algorithm_name}', fitness_value)
 
     # Adjust layout
